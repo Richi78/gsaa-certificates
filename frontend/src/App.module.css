@@ -2,5 +2,20 @@
   display: grid;
   grid-template-rows: auto 1fr auto;
   min-height: 100vh;
-  padding-inline: 5em;
+}
+
+.container>*:nth-child(1) {
+  background-color: white;
+  padding-inline: 10rem;
+}
+
+.container>*:nth-child(2) {
+  background-color: #f6f6f8;
+  padding-inline: clamp(1rem, 10vw, 10rem);
+}
+
+
+.container>*:nth-child(3) {
+  background-color: white;
+  padding-inline: 10rem;
 }

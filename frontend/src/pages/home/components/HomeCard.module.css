@@ -1,0 +1,21 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: white;
+  padding: clamp(2rem, 5vw, 3rem);
+  border-radius: 15px;
+
+  p {
+    color: rgba(0, 0, 0, 0.7);
+  }
+}
+
+.img {
+  background-repeat: no-repeat;
+  background-position: left;
+  background-size: contain;
+  height: clamp(2rem, 8vh, 4rem);
+  width: clamp(2rem, 8vh, 4rem);
+  border-radius: 15px;
+}
