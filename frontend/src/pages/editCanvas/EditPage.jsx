@@ -5,6 +5,7 @@ import PlusIcon from '../../icons/PlusIcon'
 import TrashIcon from '../../icons/TrashIcon'
 import ListElement from './components/listElement/ListElement'
 import useCanvasStore from '../../stores/canvas.store'
+import { downloadPDFsZip } from '../../utils/utils'
 
 
 const EditPage = () => {
@@ -55,14 +56,34 @@ const EditPage = () => {
     })
   }
 
+  const handleDownloadAll = () => {
+    const items = canvasList.map((item, index) => ({
+      ...item,
+      name: item.textList?.[0]?.text || `certificado-${index + 1}`
+    }))
+
+    downloadPDFsZip(items, 'certificados')
+  }
+
   return (
     <article className={styles.container}>
       <section className={styles.left}>
         <div className={styles.title}>
           <h3>Certificados (<strong>{canvasList.length}</strong>)</h3>
-          <button onClick={addCanvas}>
-            <PlusIcon />
-          </button>
+          <div className={styles.titleActions}>
+            <button
+              className={styles.downloadAllBtn}
+              onClick={handleDownloadAll}
+            >
+              Descargar todo
+            </button>
+            <button
+              className={styles.addBtn}
+              onClick={addCanvas}
+            >
+              <PlusIcon />
+            </button>
+          </div>
         </div>
         <div className={styles.listContainer}>
           {

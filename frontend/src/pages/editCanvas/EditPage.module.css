@@ -36,7 +36,13 @@
   color: #2563eb;
 }
 
-.title button {
+.titleActions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.addBtn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -50,12 +56,27 @@
   transition: transform 0.16s ease, background-color 0.16s ease;
 }
 
-.title button:hover {
+.addBtn:hover {
   background: #bfdbfe;
 }
 
-.title button:active {
+.addBtn:active {
   transform: scale(0.95);
+}
+
+.downloadAllBtn {
+  border: 1px solid #c7d2fe;
+  background: #eef2ff;
+  color: #3730a3;
+  border-radius: 10px;
+  padding: 0.5rem 0.75rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.downloadAllBtn:hover {
+  background: #e0e7ff;
 }
 
 .listContainer {
