@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import styles from './EditPage.module.css'
 import Canvas from './components/canvas/Canvas'
 import PlusIcon from '../../icons/PlusIcon'
+import TrashIcon from '../../icons/TrashIcon'
 import ListElement from './components/listElement/ListElement'
 import useCanvasStore from '../../stores/canvas.store'
 
@@ -12,6 +13,7 @@ const EditPage = () => {
   const addCanvas = useCanvasStore(state => state.addCanvas)
   const removeCanvas = useCanvasStore(state => state.removeCanvas)
   const [active, setActive] = useState(0)
+  const [expandedItems, setExpandedItems] = useState({})
 
   const selectedCanvas = canvasList[active] ?? canvasList[0]
 
@@ -22,8 +24,27 @@ const EditPage = () => {
     }
   }, [active, canvasList.length])
 
+  useEffect(() => {
+    setExpandedItems(prev => {
+      const next = {}
+
+      canvasList.forEach(item => {
+        next[item.id] = prev[item.id] ?? true
+      })
+
+      return next
+    })
+  }, [canvasList])
+
   const handleActive = (index) => {
     setActive(index)
+  }
+
+  const handleToggleAccordion = (id) => {
+    setExpandedItems(prev => ({
+      ...prev,
+      [id]: !(prev[id] ?? true)
+    }))
   }
 
   const handleRemove = (id, index) => {
@@ -46,8 +67,10 @@ const EditPage = () => {
         <div className={styles.listContainer}>
           {
             canvasList.map(
-              (e, index) =>
-                <div key={e.id} >
+              (e, index) => {
+                const isExpanded = expandedItems[e.id] ?? true
+
+                return <div key={e.id} className={styles.itemCard}>
                   <div className={styles.itemHeader}>
                     <h4
                       className={
@@ -57,18 +80,36 @@ const EditPage = () => {
                     >
                       Certificado {index + 1}
                     </h4>
-                    <button
-                      className={styles.deleteBtn}
-                      onClick={() => handleRemove(e.id, index)}
-                      disabled={canvasList.length === 1}
-                    >
-                      Eliminar
-                    </button>
+                    <div className={styles.itemActions}>
+                      <button
+                        className={styles.deleteBtn}
+                        onClick={() => handleRemove(e.id, index)}
+                        disabled={canvasList.length === 1}
+                        aria-label='Eliminar certificado'
+                        title='Eliminar'
+                      >
+                        <TrashIcon />
+                      </button>
+                      <button
+                        className={styles.accordionBtn}
+                        onClick={() => handleToggleAccordion(e.id)}
+                        aria-expanded={isExpanded}
+                        aria-label={isExpanded ? 'Plegar certificado' : 'Desplegar certificado'}
+                        title={isExpanded ? 'Plegar' : 'Desplegar'}
+                      >
+                        <span className={styles.chevron} aria-hidden='true'>
+                          {isExpanded ? '▾' : '▸'}
+                        </span>
+                      </button>
+                    </div>
                   </div>
-                  <ListElement
-                    element={e}
-                  />
+                  {isExpanded && (
+                    <ListElement
+                      element={e}
+                    />
+                  )}
                 </div>
+              }
             )
           }
         </div>
