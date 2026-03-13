@@ -1,18 +1,18 @@
 import { jsPDF } from "jspdf"
+import JSZip from "jszip"
 import { mmToPx } from "../stores/canvas.store"
 
-const downloadPDF = ({ name, width, height, textList }) => {
+const createCanvasImageData = ({ width, height, textList }) => {
   const pxWidth = mmToPx(width)
   const pxHeight = mmToPx(height)
   const canvas = document.createElement("canvas")
   canvas.width = pxWidth
   canvas.height = pxHeight
   const ctx = canvas.getContext("2d")
-  // fondo
+
   ctx.fillStyle = "white"
   ctx.fillRect(0, 0, pxWidth, pxHeight)
 
-  // dibujar textos
   ctx.fillStyle = "black"
   ctx.font = "16px Arial"
 
@@ -24,8 +24,11 @@ const downloadPDF = ({ name, width, height, textList }) => {
     )
   })
 
-  const imgData = canvas.toDataURL("image/png")
+  return canvas.toDataURL("image/png")
+}
 
+const createPDF = ({ width, height, textList }) => {
+  const imgData = createCanvasImageData({ width, height, textList })
 
   const pdf = new jsPDF({
     orientation: width > height ? "landscape" : "portrait",
@@ -35,33 +38,45 @@ const downloadPDF = ({ name, width, height, textList }) => {
 
   pdf.addImage(imgData, "PNG", 0, 0, width, height)
 
+  return pdf
+}
+
+const downloadPDF = ({ name, width, height, textList }) => {
+  const pdf = createPDF({ width, height, textList })
+
   pdf.save(`${name}.pdf`)
 }
 
-const printCanvas = ({ width, height, textList }) => {
-  const pxWidth = mmToPx(width)
-  const pxHeight = mmToPx(height)
-  const canvas = document.createElement("canvas")
-  canvas.width = pxWidth
-  canvas.height = pxHeight
-  const ctx = canvas.getContext("2d")
-  // fondo
-  ctx.fillStyle = "white"
-  ctx.fillRect(0, 0, pxWidth, pxHeight)
+const downloadPDFsZip = async (items, zipName = "certificados") => {
+  if (!Array.isArray(items) || items.length === 0) return
 
-  // dibujar textos
-  ctx.fillStyle = "black"
-  ctx.font = "16px Arial"
+  const zip = new JSZip()
 
-  textList.forEach(t => {
-    ctx.fillText(
-      t.text,
-      mmToPx(t.posX),
-      mmToPx(t.posY)
-    )
+  items.forEach((item, index) => {
+    const itemHeight = item.height ?? item.hetight
+    if (!item.width || !itemHeight || !Array.isArray(item.textList)) return
+
+    const fileName = `${item.name || `documento-${index + 1}`}.pdf`
+    const pdf = createPDF({
+      width: item.width,
+      height: itemHeight,
+      textList: item.textList
+    })
+
+    zip.file(fileName, pdf.output("arraybuffer"))
   })
 
-  const dataUrl = canvas.toDataURL("image/png")
+  const zipBlob = await zip.generateAsync({ type: "blob" })
+  const zipUrl = URL.createObjectURL(zipBlob)
+  const anchor = document.createElement("a")
+  anchor.href = zipUrl
+  anchor.download = `${zipName}.zip`
+  anchor.click()
+  URL.revokeObjectURL(zipUrl)
+}
+
+const printCanvas = ({ width, height, textList }) => {
+  const dataUrl = createCanvasImageData({ width, height, textList })
 
   const printWindow = window.open("", "_blank")
 
@@ -99,4 +114,4 @@ const printCanvas = ({ width, height, textList }) => {
   }
 }
 
-export { downloadPDF, printCanvas }
+export { downloadPDF, downloadPDFsZip, printCanvas }
