@@ -5,16 +5,18 @@ import PlusIcon from '../../icons/PlusIcon'
 import TrashIcon from '../../icons/TrashIcon'
 import ListElement from './components/listElement/ListElement'
 import useCanvasStore from '../../stores/canvas.store'
-import { downloadPDFsZip } from '../../utils/utils'
+import { downloadPDFsZip, importCanvasStoreFromCSV } from '../../utils/utils'
 
 
 const EditPage = () => {
   const canvasRef = useRef(null)
+  const csvInputRef = useRef(null)
   const canvasList = useCanvasStore(state => state.canvasList)
   const addCanvas = useCanvasStore(state => state.addCanvas)
   const removeCanvas = useCanvasStore(state => state.removeCanvas)
   const [active, setActive] = useState(0)
   const [expandedItems, setExpandedItems] = useState({})
+  const [isImporting, setIsImporting] = useState(false)
 
   const selectedCanvas = canvasList[active] ?? canvasList[0]
 
@@ -65,12 +67,40 @@ const EditPage = () => {
     downloadPDFsZip(items, 'certificados')
   }
 
+  const handleOpenImport = () => {
+    csvInputRef.current?.click()
+  }
+
+  const handleImportCSV = async (event) => {
+    const [file] = event.target.files ?? []
+    if (!file) return
+
+    setIsImporting(true)
+
+    try {
+      await importCanvasStoreFromCSV(file)
+      setActive(0)
+    } catch (error) {
+      alert(error?.message || 'No se pudo importar el archivo CSV')
+    } finally {
+      setIsImporting(false)
+      event.target.value = ''
+    }
+  }
+
   return (
     <article className={styles.container}>
       <section className={styles.left}>
         <div className={styles.title}>
           <h3>Certificados (<strong>{canvasList.length}</strong>)</h3>
           <div className={styles.titleActions}>
+            <button
+              className={styles.downloadAllBtn}
+              onClick={handleOpenImport}
+              disabled={isImporting}
+            >
+              {isImporting ? 'Importando...' : 'Importar CSV'}
+            </button>
             <button
               className={styles.downloadAllBtn}
               onClick={handleDownloadAll}
@@ -83,6 +113,13 @@ const EditPage = () => {
             >
               <PlusIcon />
             </button>
+            <input
+              ref={csvInputRef}
+              type='file'
+              accept='.csv,text/csv'
+              onChange={handleImportCSV}
+              hidden
+            />
           </div>
         </div>
         <div className={styles.listContainer}>

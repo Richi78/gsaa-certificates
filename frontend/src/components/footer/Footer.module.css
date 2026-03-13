@@ -2,3 +2,26 @@
   padding: 2rem 0rem;
   color: rgba(0, 0, 0, 0.7);
 }
+
+.content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.githubLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  transition: opacity 0.2s ease;
+}
+
+.githubLink:hover {
+  opacity: 0.75;
+}
+
+.githubLink svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}

@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-const DEFAULT = {
+export const DEFAULT = {
   id: 1,
   width: "208",
   height: "144",
