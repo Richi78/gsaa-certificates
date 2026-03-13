@@ -5,7 +5,7 @@ const Footer = () => {
     <footer className={styles.footer}>
 
       <section>
-        <small>© 2024 CertiAuto. All rights reserved.</small>
+        <small>© 2026 CertiAuto. All rights reserved.</small>
         {/* Github Icon  */}
       </section>
     </footer>

@@ -4,8 +4,8 @@ import { Link } from 'react-router';
 const Header = () => {
   return (
     <nav className={styles.nav}>
-      <h1>CertiAuto</h1>
-      <Link to="/">Empezar ahora</Link>
+      <Link to="/"><h1>CertiAuto</h1></Link>
+      <Link to="/create">Empezar ahora</Link>
     </nav>
   )
 }
