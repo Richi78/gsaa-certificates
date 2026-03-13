@@ -39,7 +39,6 @@ const EditPage = () => {
                   </h4>
                   <ListElement
                     element={e}
-                    canvasRef={canvasRef}
                   />
                 </div>
             )

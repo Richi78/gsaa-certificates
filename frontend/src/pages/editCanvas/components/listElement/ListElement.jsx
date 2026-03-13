@@ -2,7 +2,7 @@ import useCanvasStore from '../../../../stores/canvas.store'
 import styles from './ListElement.module.css'
 import { downloadPDF, printCanvas } from '../../../../utils/utils'
 
-const ListElement = ({ element, canvasRef }) => {
+const ListElement = ({ element }) => {
 
   const updateWidth = useCanvasStore(state => state.updateWidth)
   const updateHeight = useCanvasStore(state => state.updateHeight)
