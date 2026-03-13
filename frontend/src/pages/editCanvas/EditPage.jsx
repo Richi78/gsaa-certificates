@@ -10,11 +10,30 @@ const EditPage = () => {
   const canvasRef = useRef(null)
   const canvasList = useCanvasStore(state => state.canvasList)
   const addCanvas = useCanvasStore(state => state.addCanvas)
+  const removeCanvas = useCanvasStore(state => state.removeCanvas)
   const [active, setActive] = useState(0)
+
+  const selectedCanvas = canvasList[active] ?? canvasList[0]
+
+  useEffect(() => {
+    if (!canvasList.length) return
+    if (active > canvasList.length - 1) {
+      setActive(canvasList.length - 1)
+    }
+  }, [active, canvasList.length])
 
   const handleActive = (index) => {
     setActive(index)
   }
+
+  const handleRemove = (id, index) => {
+    removeCanvas(id)
+    setActive(prev => {
+      if (index < prev) return prev - 1
+      return prev
+    })
+  }
+
   return (
     <article className={styles.container}>
       <section className={styles.left}>
@@ -29,14 +48,23 @@ const EditPage = () => {
             canvasList.map(
               (e, index) =>
                 <div key={e.id} >
-                  <h4
-                    className={
-                      `${styles.textBtn} ${index === active ? styles.active : ''}`
-                    }
-                    onClick={() => handleActive(index)}
-                  >
-                    Certificado {index + 1}
-                  </h4>
+                  <div className={styles.itemHeader}>
+                    <h4
+                      className={
+                        `${styles.textBtn} ${index === active ? styles.active : ''}`
+                      }
+                      onClick={() => handleActive(index)}
+                    >
+                      Certificado {index + 1}
+                    </h4>
+                    <button
+                      className={styles.deleteBtn}
+                      onClick={() => handleRemove(e.id, index)}
+                      disabled={canvasList.length === 1}
+                    >
+                      Eliminar
+                    </button>
+                  </div>
                   <ListElement
                     element={e}
                   />
@@ -46,12 +74,15 @@ const EditPage = () => {
         </div>
       </section>
       <section className={styles.right}>
-        <Canvas
-          reference={canvasRef}
-          width={canvasList[active].width}
-          height={canvasList[active].height}
-          textList={canvasList[active].textList}
-        />
+        {
+          selectedCanvas &&
+          <Canvas
+            reference={canvasRef}
+            width={selectedCanvas.width}
+            height={selectedCanvas.height}
+            textList={selectedCanvas.textList}
+          />
+        }
       </section>
     </article>
   )

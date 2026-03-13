@@ -31,6 +31,14 @@ const useCanvasStore = create(
             { ...DEFAULT, id: Date.now() }
           ]
         })),
+
+      removeCanvas: (id) =>
+        set(state => ({
+          canvasList: state.canvasList.length === 1
+            ? state.canvasList
+            : state.canvasList.filter(e => e.id !== id)
+        })),
+
       updateWidth: (id, width) =>
         set(state => ({
           canvasList: state.canvasList.map(
