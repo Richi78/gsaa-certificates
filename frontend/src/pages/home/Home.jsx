@@ -9,7 +9,7 @@ const Home = () => {
           <h1>Certificados masivos en <span>segundos</span>, no horas</h1>
           <p>Sube tu archivo CSV, personaliza el diseño y
             exporta cientos de certificados en PDF de
-            forma instantánea. Ahorra tiemp y elimina
+            forma instantánea. Ahorra tiempo y elimina
             errores manuales hoy mismo.</p>
           <div className={styles.demoSection}>
             <button className={styles.begin}>
@@ -54,9 +54,7 @@ const Home = () => {
         <p>Únete a cientos de usuarios y empieza a
           generarlos hoy mismo. No se requiere tarjeta de crédito.
         </p>
-        {/* <div> */}
-          <button className={styles.lastBtn}>Empezar ahora gratis</button>
-        {/* </div> */}
+        <button className={styles.lastBtn}>Empezar ahora gratis</button>
       </article>
     </div>
   )
