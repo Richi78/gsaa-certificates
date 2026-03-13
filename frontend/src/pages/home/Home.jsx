@@ -1,6 +1,7 @@
 import HomeCard from './components/HomeCard';
 import styles from './Home.module.css'
 import { content } from './MockCards';
+import { Link } from 'react-router';
 const Home = () => {
   return (
     <div className={styles.container}>
@@ -12,25 +13,29 @@ const Home = () => {
             forma instantánea. Ahorra tiempo y elimina
             errores manuales hoy mismo.</p>
           <div className={styles.demoSection}>
-            <button className={styles.begin}>
+            <Link to='/create' className={styles.begin}>
               Empezar ahora - Es gratis
-            </button>
-            <button className={styles.demo}>
+            </Link>
+            <a href='#como-funciona' className={styles.demo}>
               Ver demo
-            </button>
+            </a>
           </div>
         </section>
         <div className={styles.right}>
-          <div className={styles.outlined}>
+          <Link
+            to='/create'
+            className={styles.outlined}
+            aria-label='Ir al editor para subir el CSV'
+          >
             <img src="upload.svg" alt="upload icon" />
             <p>
               Arrastra tu CSV para ver la magia
             </p>
-          </div>
+          </Link>
         </div>
       </article>
 
-      <article className={styles.process}>
+      <article id='como-funciona' className={styles.process}>
         <h1>¿Cómo funciona?</h1>
         <p>Tres simples pasos para automatizar tu entrega de
           certificados sin complicaciones técnicas.
@@ -54,7 +59,7 @@ const Home = () => {
         <p>Únete a cientos de usuarios y empieza a
           generarlos hoy mismo. No se requiere tarjeta de crédito.
         </p>
-        <button className={styles.lastBtn}>Empezar ahora gratis</button>
+        <Link to='/create' className={styles.lastBtn}>Empezar ahora gratis</Link>
       </article>
     </div>
   )
