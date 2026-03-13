@@ -12,10 +12,31 @@
 
 .dimension {
   display: flex;
-  gap: 1rem;
+  gap: 2rem;
 }
 
 .axis {
   display: flex;
-  gap: 1rem;
+  gap: 2rem;
+}
+
+.btnSection {
+  display: flex;
+  gap: 2rem;
+  padding-top: 1rem;
+}
+
+.btnSection > *{
+  flex: 1;
+}
+
+.btn{
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 15px;
+  background-color: rgb(196, 217, 235);
+}
+
+.btn:active{
+  transform: scale(0.96);
 }

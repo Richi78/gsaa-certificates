@@ -8,7 +8,7 @@ const DEFAULT = {
   textList: [
     {
       id: 1,
-      text: 'PONER NOMBRE',
+      text: 'NOMBRE APELLIDO1 APELLIDO2',
       posX: 74,
       posY: 81,
     },

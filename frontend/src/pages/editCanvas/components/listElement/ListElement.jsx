@@ -1,7 +1,8 @@
 import useCanvasStore from '../../../../stores/canvas.store'
 import styles from './ListElement.module.css'
+import { downloadPDF, printCanvas } from '../../../../utils/utils'
 
-const ListElement = ({ element }) => {
+const ListElement = ({ element, canvasRef }) => {
 
   const updateWidth = useCanvasStore(state => state.updateWidth)
   const updateHeight = useCanvasStore(state => state.updateHeight)
@@ -32,11 +33,19 @@ const ListElement = ({ element }) => {
     if (isNaN(value)) return
     updatePosY(elementId, textId, value)
   }
+  const handlePDF = () => {
+    downloadPDF(
+      { ...element, name: element.textList[0].text }
+    )
+  }
+  const handlePrint = () => {
+    printCanvas(element)
+  }
   return (
     <article className={styles.container}>
       <section className={styles.dimension}>
         <label >
-          <p>Ancho</p>
+          <p>Ancho (mm)</p>
           <input
             type="text"
             value={element.width}
@@ -45,7 +54,7 @@ const ListElement = ({ element }) => {
           />
         </label>
         <label >
-          <p>Alto</p>
+          <p>Alto (mm)</p>
           <input
             type="text"
             value={element.height}
@@ -70,7 +79,7 @@ const ListElement = ({ element }) => {
                 </label>
                 <div className={styles.axis}>
                   <label>
-                    <p>Eje X</p>
+                    <p>Mover X (mm)</p>
                     <input
                       type="text"
                       value={e.posX}
@@ -79,7 +88,7 @@ const ListElement = ({ element }) => {
                     />
                   </label>
                   <label>
-                    <p>Eje Y</p>
+                    <p>Mover Y (mm)</p>
                     <input
                       type="text"
                       value={e.posY}
@@ -91,6 +100,20 @@ const ListElement = ({ element }) => {
               </div>
           )
         }
+      </section>
+      <section className={styles.btnSection}>
+        <button
+          className={styles.btn}
+          onClick={handlePDF}
+        >
+          Descargar PDF
+        </button>
+        <button
+          className={styles.btn}
+          onClick={handlePrint}
+        >
+          Imprimir
+        </button>
       </section>
     </article>
   )
