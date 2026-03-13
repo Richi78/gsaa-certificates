@@ -1,0 +1,21 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 0rem 1rem;
+  input {
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    padding: 0.4rem;
+    width: 100%;
+  }
+}
+
+.dimension {
+  display: flex;
+  gap: 1rem;
+}
+
+.axis {
+  display: flex;
+  gap: 1rem;
+}
