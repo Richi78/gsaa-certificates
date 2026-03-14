@@ -3,6 +3,7 @@ import styles from './EditPage.module.css'
 import Canvas from './components/canvas/Canvas'
 import PlusIcon from '../../icons/PlusIcon'
 import TrashIcon from '../../icons/TrashIcon'
+import DuplicateIcon from '../../icons/DuplicateIcon'
 import ListElement from './components/listElement/ListElement'
 import useCanvasStore from '../../stores/canvas.store'
 import { downloadPDFsZip, importCanvasStoreFromCSV } from '../../utils/utils'
@@ -13,6 +14,7 @@ const EditPage = () => {
   const csvInputRef = useRef(null)
   const canvasList = useCanvasStore(state => state.canvasList)
   const addCanvas = useCanvasStore(state => state.addCanvas)
+  const duplicateCanvas = useCanvasStore(state => state.duplicateCanvas)
   const removeCanvas = useCanvasStore(state => state.removeCanvas)
   const [active, setActive] = useState(0)
   const [expandedItems, setExpandedItems] = useState({})
@@ -147,6 +149,14 @@ const EditPage = () => {
                         title='Eliminar'
                       >
                         <TrashIcon />
+                      </button>
+                      <button
+                        className={styles.accordionBtn}
+                        onClick={() => duplicateCanvas(e.id)}
+                        aria-label='Duplicar certificado'
+                        title='Duplicar'
+                      >
+                        <DuplicateIcon />
                       </button>
                       <button
                         className={styles.accordionBtn}

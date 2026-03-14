@@ -1,6 +1,20 @@
 import { jsPDF } from "jspdf"
 import JSZip from "jszip"
-import useCanvasStore, { DEFAULT, mmToPx } from "../stores/canvas.store"
+import useCanvasStore, { DEFAULT } from "../stores/canvas.store"
+
+const DEFAULT_EXPORT_DPI = 300
+const BASE_PREVIEW_DPI = 96
+
+const mmToPxAtDpi = (mm, dpi = DEFAULT_EXPORT_DPI) => {
+  const numericMm = Number(mm)
+  const numericDpi = Number(dpi)
+
+  if (!Number.isFinite(numericMm) || !Number.isFinite(numericDpi) || numericDpi <= 0) {
+    return 0
+  }
+
+  return Math.round((numericMm * numericDpi) / 25.4)
+}
 
 const readFileAsText = (file) =>
   new Promise((resolve, reject) => {
@@ -104,9 +118,11 @@ const importCanvasStoreFromCSV = async (csvFile, options = {}) => {
   }
 }
 
-const createCanvasImageData = ({ width, height, textList }) => {
-  const pxWidth = mmToPx(width)
-  const pxHeight = mmToPx(height)
+const createCanvasImageData = ({ width, height, textList, dpi = DEFAULT_EXPORT_DPI }) => {
+  const numericWidth = Number(width)
+  const numericHeight = Number(height)
+  const pxWidth = mmToPxAtDpi(numericWidth, dpi)
+  const pxHeight = mmToPxAtDpi(numericHeight, dpi)
   const canvas = document.createElement("canvas")
   canvas.width = pxWidth
   canvas.height = pxHeight
@@ -116,35 +132,42 @@ const createCanvasImageData = ({ width, height, textList }) => {
   ctx.fillRect(0, 0, pxWidth, pxHeight)
 
   ctx.fillStyle = "black"
-  ctx.font = "16px Arial"
 
   textList.forEach(t => {
+    const textSize = Number.isFinite(Number(t.textSize))
+      ? Number(t.textSize)
+      : 14
+
+    const scaledFontSize = Math.max(1, Math.round((textSize * dpi) / BASE_PREVIEW_DPI))
+    ctx.font = `${scaledFontSize}px Arial`
     ctx.fillText(
       t.text,
-      mmToPx(t.posX),
-      mmToPx(t.posY)
+      mmToPxAtDpi(t.posX, dpi),
+      mmToPxAtDpi(t.posY, dpi)
     )
   })
 
   return canvas.toDataURL("image/png")
 }
 
-const createPDF = ({ width, height, textList }) => {
-  const imgData = createCanvasImageData({ width, height, textList })
+const createPDF = ({ width, height, textList, dpi = DEFAULT_EXPORT_DPI }) => {
+  const numericWidth = Number(width)
+  const numericHeight = Number(height)
+  const imgData = createCanvasImageData({ width: numericWidth, height: numericHeight, textList, dpi })
 
   const pdf = new jsPDF({
-    orientation: width > height ? "landscape" : "portrait",
+    orientation: numericWidth > numericHeight ? "landscape" : "portrait",
     unit: "mm",
-    format: [width, height]
+    format: [numericWidth, numericHeight]
   })
 
-  pdf.addImage(imgData, "PNG", 0, 0, width, height)
+  pdf.addImage(imgData, "PNG", 0, 0, numericWidth, numericHeight)
 
   return pdf
 }
 
-const downloadPDF = ({ name, width, height, textList }) => {
-  const pdf = createPDF({ width, height, textList })
+const downloadPDF = ({ name, width, height, textList, dpi = DEFAULT_EXPORT_DPI }) => {
+  const pdf = createPDF({ width, height, textList, dpi })
 
   pdf.save(`${name}.pdf`)
 }
@@ -162,7 +185,8 @@ const downloadPDFsZip = async (items, zipName = "certificados") => {
     const pdf = createPDF({
       width: item.width,
       height: itemHeight,
-      textList: item.textList
+      textList: item.textList,
+      dpi: item.dpi ?? DEFAULT_EXPORT_DPI
     })
 
     zip.file(fileName, pdf.output("arraybuffer"))
@@ -177,8 +201,10 @@ const downloadPDFsZip = async (items, zipName = "certificados") => {
   URL.revokeObjectURL(zipUrl)
 }
 
-const printCanvas = ({ width, height, textList }) => {
-  const dataUrl = createCanvasImageData({ width, height, textList })
+const printCanvas = ({ width, height, textList, dpi = DEFAULT_EXPORT_DPI }) => {
+  const numericWidth = Number(width)
+  const numericHeight = Number(height)
+  const dataUrl = createCanvasImageData({ width: numericWidth, height: numericHeight, textList, dpi })
 
   const printWindow = window.open("", "_blank")
 
@@ -187,7 +213,7 @@ const printCanvas = ({ width, height, textList }) => {
       <head>
         <style>
           @page {
-            size: ${width}mm ${height}mm;
+            size: ${numericWidth}mm ${numericHeight}mm;
             margin: 0;
           }
 
@@ -196,8 +222,8 @@ const printCanvas = ({ width, height, textList }) => {
           }
 
           img {
-            width: ${width}mm;
-            height: ${height}mm;
+            width: ${numericWidth}mm;
+            height: ${numericHeight}mm;
             display:block;
           }
         </style>
