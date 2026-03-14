@@ -20,10 +20,23 @@
   gap: 2rem;
 }
 
+.textItem {
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  padding: 0.75rem;
+  margin-top: 0.8rem;
+  background-color: rgba(196, 217, 235, 0.25);
+}
+
 .textHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.textTitle {
+  font-weight: 700;
+  font-size: 1rem;
 }
 
 .iconBtn {

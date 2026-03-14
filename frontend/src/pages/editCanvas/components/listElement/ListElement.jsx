@@ -12,6 +12,7 @@ const ListElement = ({ element }) => {
   const updateText = useCanvasStore(state => state.updateText)
   const updatePosX = useCanvasStore(state => state.updatePosX)
   const updatePosY = useCanvasStore(state => state.updatePosY)
+  const updateTextSize = useCanvasStore(state => state.updateTextSize)
 
   const handleWidth = (e) => {
     const value = e.target.value
@@ -35,6 +36,11 @@ const ListElement = ({ element }) => {
     const value = event.target.value
     if (isNaN(value)) return
     updatePosY(elementId, textId, value)
+  }
+  const handleTextSize = (event, elementId, textId) => {
+    const value = event.target.value
+    if (isNaN(Number(value))) return
+    updateTextSize(elementId, textId, value)
   }
   const handlePDF = () => {
     downloadPDF(
@@ -75,11 +81,11 @@ const ListElement = ({ element }) => {
       <section>
         {
           element.textList.map(
-            e =>
-              <div key={e.id}>
+            (e, index) =>
+              <div key={e.id} className={styles.textItem}>
                 <label>
                   <div className={styles.textHeader}>
-                    <p>Texto</p>
+                    <p className={styles.textTitle}>Texto {index + 1}</p>
                     <button
                       className={styles.iconBtn}
                       onClick={() => handleRemoveText(e.id)}
@@ -112,6 +118,15 @@ const ListElement = ({ element }) => {
                       value={e.posY}
                       placeholder='En eje Y'
                       onChange={(event) => handlePosY(event, element.id, e.id)}
+                    />
+                  </label>
+                  <label>
+                    <p>Tamaño</p>
+                    <input
+                      type="text"
+                      value={e.textSize}
+                      placeholder='Tamaño'
+                      onChange={(event) => handleTextSize(event, element.id, e.id)}
                     />
                   </label>
                 </div>
