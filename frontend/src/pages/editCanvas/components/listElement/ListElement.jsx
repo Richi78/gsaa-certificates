@@ -1,11 +1,14 @@
 import useCanvasStore from '../../../../stores/canvas.store'
 import styles from './ListElement.module.css'
 import { downloadPDF, printCanvas } from '../../../../utils/utils'
+import TrashIcon from '../../../../icons/TrashIcon'
 
 const ListElement = ({ element }) => {
 
   const updateWidth = useCanvasStore(state => state.updateWidth)
   const updateHeight = useCanvasStore(state => state.updateHeight)
+  const addText = useCanvasStore(state => state.addText)
+  const removeText = useCanvasStore(state => state.removeText)
   const updateText = useCanvasStore(state => state.updateText)
   const updatePosX = useCanvasStore(state => state.updatePosX)
   const updatePosY = useCanvasStore(state => state.updatePosY)
@@ -41,6 +44,12 @@ const ListElement = ({ element }) => {
   const handlePrint = () => {
     printCanvas(element)
   }
+  const handleAddText = () => {
+    addText(element.id)
+  }
+  const handleRemoveText = (textId) => {
+    removeText(element.id, textId)
+  }
   return (
     <article className={styles.container}>
       <section className={styles.dimension}>
@@ -69,7 +78,16 @@ const ListElement = ({ element }) => {
             e =>
               <div key={e.id}>
                 <label>
-                  <p>Texto</p>
+                  <div className={styles.textHeader}>
+                    <p>Texto</p>
+                    <button
+                      className={styles.iconBtn}
+                      onClick={() => handleRemoveText(e.id)}
+                      aria-label='Quitar texto'
+                    >
+                      <TrashIcon />
+                    </button>
+                  </div>
                   <input
                     type="text"
                     value={e.text}
@@ -100,6 +118,12 @@ const ListElement = ({ element }) => {
               </div>
           )
         }
+        <button
+          className={styles.btn}
+          onClick={handleAddText}
+        >
+          Agregar texto
+        </button>
       </section>
       <section className={styles.btnSection}>
         <button

@@ -20,6 +20,20 @@
   gap: 2rem;
 }
 
+.textHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.iconBtn {
+  border: none;
+  background: none;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
 .btnSection {
   display: flex;
   gap: 2rem;
@@ -35,6 +49,14 @@
   padding: 0.5rem 1rem;
   border-radius: 15px;
   background-color: rgb(196, 217, 235);
+}
+
+.container > section > .btn {
+  margin-top: 1rem;
+}
+
+.iconBtn:active{
+  transform: scale(0.96);
 }
 
 .btn:active{
