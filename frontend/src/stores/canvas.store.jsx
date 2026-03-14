@@ -15,14 +15,14 @@ export const DEFAULT = {
     },
     {
       id: 2,
-      text: 'Por haber participado del ACAMPANGLO 2022 "EN BUSCA DE LOS DIOSES"',
+      text: 'Por haber participado del ACAMPANGLO 2026 "NOMBRE CAMPAMENTO"',
       posX: 41,
       posY: 86,
       textSize: 14,
     },
     {
       id: 3,
-      text: 'en calidad de Comisión Organizadora. Realizado del 15 al 17 de julio de 2022',
+      text: 'en calidad de Comisión Organizadora. Realizado del XX al YY de MES de AÑO',
       posX: 39,
       posY: 91,
       textSize: 14,
@@ -43,7 +43,7 @@ export const DEFAULT = {
     },
     {
       id: 6,
-      text: 'Responsable de Grupo A.I.',
+      text: 'Responsable de Grupo A.A.',
       posX: 82,
       posY: 129,
       textSize: 14,
