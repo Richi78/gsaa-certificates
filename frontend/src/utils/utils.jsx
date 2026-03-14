@@ -116,9 +116,13 @@ const createCanvasImageData = ({ width, height, textList }) => {
   ctx.fillRect(0, 0, pxWidth, pxHeight)
 
   ctx.fillStyle = "black"
-  ctx.font = "16px Arial"
 
   textList.forEach(t => {
+    const textSize = Number.isFinite(Number(t.textSize))
+      ? Number(t.textSize)
+      : 14
+
+    ctx.font = `${textSize}px Arial`
     ctx.fillText(
       t.text,
       mmToPx(t.posX),
