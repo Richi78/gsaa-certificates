@@ -1,14 +1,14 @@
 import { useEffect } from "react"
 import { mmToPx } from "../../../../stores/canvas.store"
 
-const Canvas = ({ reference, width, height, textList }) => {
+const Canvas = ({ reference, width, height, textList, textSize = 14 }) => {
   const pxWidth = mmToPx(width)
   const pxHeith = mmToPx(height)
-  const drawText = (context, textList) => {
+  const drawText = (context, textList, textSize) => {
     context.fillStyle = 'black'
-    context.font = '16px Arial'
 
     textList.forEach(e => {
+      context.font = `${e.textSize ?? textSize}px Arial`
       context.fillText(e.text, mmToPx(e.posX), mmToPx(e.posY))
     })
   }
@@ -22,8 +22,8 @@ const Canvas = ({ reference, width, height, textList }) => {
 
     context.fillStyle = 'white'
     context.fillRect(0, 0, pxWidth, pxHeith)
-    drawText(context, textList)
-  }, [width, height, textList])
+    drawText(context, textList, textSize)
+  }, [width, height, textList, textSize])
   return (
     <canvas
       ref={reference}
