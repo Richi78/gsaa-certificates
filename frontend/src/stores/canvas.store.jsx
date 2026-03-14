@@ -11,36 +11,42 @@ export const DEFAULT = {
       text: 'NOMBRE1 NOMBRE2 APELLIDO1 APELLIDO2',
       posX: 74,
       posY: 81,
+      textSize: 16,
     },
     {
       id: 2,
       text: 'Por haber participado del ACAMPANGLO 2022 "EN BUSCA DE LOS DIOSES"',
       posX: 41,
       posY: 86,
+      textSize: 14,
     },
     {
       id: 3,
       text: 'en calidad de Comisión Organizadora. Realizado del 15 al 17 de julio de 2022',
       posX: 39,
       posY: 91,
+      textSize: 14,
     },
     {
       id: 4,
       text: 'en el Campo Escuela "Germán Rocha M." - Arani',
       posX: 63,
       posY: 96,
+      textSize: 14,
     },
     {
       id: 5,
       text: 'Nombre Apellido1 Apellido2',
       posX: 81,
       posY: 124,
+      textSize: 14,
     },
     {
       id: 6,
       text: 'Responsable de Grupo A.I.',
       posX: 82,
       posY: 129,
+      textSize: 14,
     }
   ]
 }
@@ -48,6 +54,14 @@ export const DEFAULT = {
 export const mmToPx = (mm) => {
   return parseInt(mm * 96 / 26)
 }
+
+const generateCanvasId = () => Date.now()
+
+const cloneCanvas = (canvas, id = generateCanvasId()) => ({
+  ...canvas,
+  id,
+  textList: canvas.textList.map(text => ({ ...text }))
+})
 
 const useCanvasStore = create(
   persist(
@@ -58,9 +72,25 @@ const useCanvasStore = create(
         set(state => ({
           canvasList: [
             ...state.canvasList,
-            { ...DEFAULT, id: Date.now() }
+            cloneCanvas(DEFAULT)
           ]
         })),
+
+      duplicateCanvas: (id) =>
+        set(state => {
+          const selectedCanvas = state.canvasList.find(e => e.id === id)
+
+          if (!selectedCanvas) {
+            return state
+          }
+
+          return {
+            canvasList: [
+              ...state.canvasList,
+              cloneCanvas(selectedCanvas)
+            ]
+          }
+        }),
 
       removeCanvas: (id) =>
         set(state => ({
@@ -108,6 +138,7 @@ const useCanvasStore = create(
                     text: '',
                     posX: 0,
                     posY: 0,
+                    textSize: 14,
                   },
                 ]
               }
@@ -177,6 +208,22 @@ const useCanvasStore = create(
                 textList: e.textList.map(
                   t => t.id === textId
                     ? { ...t, posY: value }
+                    : t
+                )
+              }
+              : e
+          )
+        })),
+
+      updateTextSize: (elementId, textId, value) =>
+        set(state => ({
+          canvasList: state.canvasList.map(
+            e => e.id === elementId
+              ? {
+                ...e,
+                textList: e.textList.map(
+                  t => t.id === textId
+                    ? { ...t, textSize: value }
                     : t
                 )
               }
